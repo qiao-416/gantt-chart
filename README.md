@@ -7,6 +7,25 @@
 ## 甘特图
 
 <!-- GANTT:START -->
+
+更新日期：**2026-10-15（UTC）**。今日处于计划日期内的任务：无。
+
+```mermaid
+gantt
+    title 新项目四周计划
+    dateFormat YYYY-MM-DD
+    axisFormat %m/%d
+    tickInterval 1week
+    section 项目开发
+    需求确认 : t1, 2026-10-19, 4d
+    项目搭建 : t2, 2026-10-22, 5d
+    核心开发 : t3, 2026-10-26, 12d
+    测试修复 : t4, 2026-11-05, 8d
+    文档发布 : t5, 2026-11-09, 5d
+```
+
+任务状态来自 `schedule.json`；每日更新不会自动认定任务已完成。
+
 <!-- GANTT:END -->
 
 ## 修改排期
