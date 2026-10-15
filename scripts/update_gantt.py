@@ -60,6 +60,11 @@ def load_schedule(path: Path) -> tuple[str, list[Task]]:
         status = raw.get("status", "planned")
         if not isinstance(status, str) or status not in STATUSES:
             raise ValueError(f"{field}: status must be planned, active, or done")
+        if "progress" in raw:
+            progress = raw["progress"]
+            if type(progress) is not int or not 0 <= progress <= 100:
+                raise ValueError(f"{field}: progress must be an integer between 0 and 100")
+            status = "done" if progress == 100 else "active" if progress > 0 else "planned"
         tasks.append(Task(name, start, end, status))
     return title, tasks
 

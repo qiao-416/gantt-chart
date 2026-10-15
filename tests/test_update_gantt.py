@@ -36,6 +36,20 @@ class GanttTests(unittest.TestCase):
         expected = "用户的介绍\n" + START + "\n\n新图\n\n" + END + "\n用户的说明\n"
         self.assertEqual(replace_generated(readme, "新图"), expected)
 
+    def test_progress_drives_the_same_status_as_the_website(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "schedule.json"
+            for progress, expected in ((0, "planned"), (50, "active"), (100, "done")):
+                data = {"title": "计划", "tasks": [{"name": "任务", "start": "2026-10-19", "end": "2026-10-22", "status": "planned", "progress": progress}]}
+                path.write_text(json.dumps(data), encoding="utf-8")
+                _, tasks = load_schedule(path)
+                self.assertEqual(tasks[0].status, expected)
+            for progress in (-1, 101, True, "50"):
+                data["tasks"][0]["progress"] = progress
+                path.write_text(json.dumps(data), encoding="utf-8")
+                with self.assertRaises(ValueError):
+                    load_schedule(path)
+
     def test_bad_markers_fail_instead_of_overwriting_readme(self):
         for readme in ("没有标记", END + START, START + END + START):
             with self.subTest(readme=readme), self.assertRaises(ValueError):

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#7561bc">
+  <meta name="description" content="清晰的项目甘特图，查看任务、负责人、完成进度和每日排期。">
+  <title>项目排期 · Gantt</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="项目排期首页"><span class="brand-mark" aria-hidden="true">▤</span><span>GANTT<span class="brand-divider">/</span><span class="brand-caption">项目排期</span></span></a>
+    <nav class="top-actions" aria-label="项目操作">
+      <a class="repo-link" href="https://github.com/qiao-416/gantt-chart" target="_blank" rel="noopener noreferrer">GitHub 仓库 <span aria-hidden="true">↗</span></a>
+      <button class="button secondary" id="exportButton" type="button">导出排期</button>
+      <button class="button primary" id="addButton" type="button"><span aria-hidden="true">＋</span> 添加任务</button>
+    </nav>
+  </header>
+  <main>
+    <section class="project-heading" aria-labelledby="projectTitle">
+      <div><div class="eyebrow">PROJECT TIMELINE</div><h1 id="projectTitle">新项目四周计划</h1><p class="project-subtitle">把每一项工作，放在合适的时间。</p></div>
+      <div class="project-meta"><span class="sync-state" id="syncState">已发布排期</span><span id="publishedAt"></span></div>
+    </section>
+    <section class="workspace" aria-label="甘特图工作区">
+      <div class="chart-toolbar">
+        <div class="chart-info"><span class="chart-name">项目计划</span><span class="separator" aria-hidden="true"></span><span id="taskCount">5 项任务</span><span class="date-range" id="dateRange"></span></div>
+        <div class="chart-controls">
+          <button class="button quiet" id="todayButton" type="button">今天</button>
+          <div class="view-switch" role="group" aria-label="时间轴缩放"><button type="button" id="fitButton" aria-pressed="true">总览</button><button type="button" id="dayButton" aria-pressed="false">按日</button></div>
+          <button class="button quiet" id="importButton" type="button">导入</button><input id="importFile" type="file" accept=".json,application/json" hidden>
+          <button class="button quiet help-button" id="helpButton" type="button" aria-label="查看编辑与同步说明">?</button>
+        </div>
+      </div>
+      <div class="sheet-scroll" id="sheetScroll" tabindex="0" role="region" aria-label="任务与时间轴，可横向滚动"><table id="ganttTable" aria-label="项目甘特图"></table></div>
+      <div class="chart-footer"><div class="legend" id="legend" aria-label="阶段图例"></div><span class="footer-hint">点击任务或色条编辑 · 深色部分表示完成进度</span></div>
+    </section>
+    <div class="page-footer"><span id="planSummary"></span><span>修改保存在本机；导出排期并更新仓库后自动发布。<button id="recoverButton" type="button" hidden>恢复旧草稿</button></span></div>
+  </main>
+  <dialog id="taskDialog" aria-labelledby="dialogTitle">
+    <form id="taskForm">
+      <div class="dialog-header"><div><div class="eyebrow">TASK DETAILS</div><h2 id="dialogTitle">编辑任务</h2></div><button class="close-button" id="closeDialog" type="button" aria-label="关闭">×</button></div>
+      <div class="form-grid">
+        <label class="full">任务名称<input id="taskName" name="name" required maxlength="80" autocomplete="off"></label>
+        <label>所属阶段<select id="taskGroup" name="group"></select></label>
+        <label>负责人<input id="taskOwner" name="assigned_to" maxlength="80" placeholder="未分配" autocomplete="off"></label>
+        <label>开始日期<input id="taskStart" name="start" type="date" required min="1900-01-01" max="2100-12-31"></label>
+        <label>结束日期<input id="taskEnd" name="end" type="date" required min="1900-01-01" max="2100-12-31"></label>
+        <label class="full">完成进度（%）<div class="progress-input"><input id="taskProgress" name="progress" type="number" min="0" max="100" step="1" required><span>0% 待开始 · 100% 已完成</span></div></label>
+      </div>
+      <p class="form-error" id="formError" role="alert" hidden></p>
+      <div class="dialog-footer"><span>保存为本机草稿</span><div><button class="button secondary" id="cancelDialog" type="button">取消</button><button class="button primary" type="submit">保存任务</button></div></div>
+    </form>
+  </dialog>
+  <dialog id="helpDialog" aria-labelledby="helpTitle"><div class="dialog-header"><h2 id="helpTitle">编辑与同步</h2><button class="close-button" id="closeHelp" type="button" aria-label="关闭说明">×</button></div><div class="help-content"><p>点击任务名称或时间条，可以修改负责人、日期和完成进度。任务修改会保存在当前浏览器。</p><ol><li>点击「导出排期」，下载更新后的文件。</li><li>将内容更新到仓库的 <a href="https://github.com/qiao-416/gantt-chart/edit/main/schedule.json" target="_blank" rel="noopener noreferrer">schedule.json ↗</a> 并提交。</li><li>GitHub Actions 自动更新 README 和这个独立界面。</li></ol><p>每日定时刷新排期。任务完成状态以你填写的进度为准。</p></div></dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <noscript>请启用 JavaScript 查看甘特图。也可在 GitHub 仓库中查看 README。</noscript>
+  <script id="initialSchedule" type="application/json">__SCHEDULE_JSON__</script>
+  <script id="buildMeta" type="application/json">__BUILD_META__</script>
+</body>
+</html>

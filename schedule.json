@@ -1,10 +1,15 @@
 {
   "title": "新项目四周计划",
+  "groups": [
+    {"id": "initiation", "name": "项目启动", "color": "purple"},
+    {"id": "development", "name": "核心开发", "color": "pink"},
+    {"id": "delivery", "name": "测试与交付", "color": "green"}
+  ],
   "tasks": [
-    {"name": "需求确认", "start": "2026-10-19", "end": "2026-10-22", "status": "planned"},
-    {"name": "项目搭建", "start": "2026-10-22", "end": "2026-10-26", "status": "planned"},
-    {"name": "核心开发", "start": "2026-10-26", "end": "2026-11-06", "status": "planned"},
-    {"name": "测试修复", "start": "2026-11-05", "end": "2026-11-12", "status": "planned"},
-    {"name": "文档发布", "start": "2026-11-09", "end": "2026-11-13", "status": "planned"}
+    {"name": "需求确认", "assigned_to": "未分配", "group": "initiation", "progress": 0, "start": "2026-10-19", "end": "2026-10-22", "status": "planned"},
+    {"name": "项目搭建", "assigned_to": "未分配", "group": "initiation", "progress": 0, "start": "2026-10-22", "end": "2026-10-26", "status": "planned"},
+    {"name": "核心开发", "assigned_to": "未分配", "group": "development", "progress": 0, "start": "2026-10-26", "end": "2026-11-06", "status": "planned"},
+    {"name": "测试修复", "assigned_to": "未分配", "group": "delivery", "progress": 0, "start": "2026-11-05", "end": "2026-11-12", "status": "planned"},
+    {"name": "文档发布", "assigned_to": "未分配", "group": "delivery", "progress": 0, "start": "2026-11-09", "end": "2026-11-13", "status": "planned"}
   ]
 }
