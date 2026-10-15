@@ -1,0 +1,56 @@
+name: Update Gantt
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - schedule.json
+      - scripts/**
+      - tests/**
+      - README.md
+      - docs/gantt.mmd
+      - .github/workflows/update-gantt.yml
+  schedule:
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: update-gantt-main
+  cancel-in-progress: false
+
+jobs:
+  update:
+    name: Validate, render, and sync
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Check out the latest main branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+
+      - name: Test the generator
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Generate and commit chart updates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/update_gantt.py
+          git add -- README.md docs/gantt.mmd
+          if git diff --cached --quiet; then
+            echo "Gantt is already up to date."
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'docs: sync generated Gantt chart'
+          git push origin HEAD:main
+
+      - name: Publish run summary
+        run: cat README.md >> "$GITHUB_STEP_SUMMARY"

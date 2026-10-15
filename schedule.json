@@ -1,0 +1,10 @@
+{
+  "title": "新项目四周计划",
+  "tasks": [
+    {"name": "需求确认", "start": "2026-10-19", "end": "2026-10-22", "status": "planned"},
+    {"name": "项目搭建", "start": "2026-10-22", "end": "2026-10-26", "status": "planned"},
+    {"name": "核心开发", "start": "2026-10-26", "end": "2026-11-06", "status": "planned"},
+    {"name": "测试修复", "start": "2026-11-05", "end": "2026-11-12", "status": "planned"},
+    {"name": "文档发布", "start": "2026-11-09", "end": "2026-11-13", "status": "planned"}
+  ]
+}
